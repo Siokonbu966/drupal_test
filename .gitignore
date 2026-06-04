@@ -34,3 +34,5 @@ drupal-app/web/default/files/
 .vscode/
 .DS_Store
 Thumbs.db
+
+.direnv/
