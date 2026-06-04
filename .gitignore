@@ -1,0 +1,36 @@
+# Antigravity
+.antigravitycli/
+
+# Drupal specific ignores
+drupal-app/vendor/
+drupal-app/web/core/
+
+# Ignore contributed modules, themes, and libraries (managed by Composer)
+drupal-app/web/modules/contrib/
+drupal-app/web/themes/contrib/
+drupal-app/web/profiles/contrib/
+drupal-app/web/libraries/
+drupal-app/drush/Commands/contrib/
+
+# Ignore site-specific configuration and files
+drupal-app/web/sites/*/settings.php
+drupal-app/web/sites/*/settings.local.php
+drupal-app/web/sites/*/services.yml
+drupal-app/web/sites/*/services.local.yml
+
+# Ignore user-uploaded files and private storage
+drupal-app/web/sites/*/files/
+drupal-app/web/sites/*/private/
+drupal-app/web/sites/simpletest/
+drupal-app/web/default/files/
+
+# SQLite databases
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# General IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

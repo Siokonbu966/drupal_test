@@ -1,0 +1,41 @@
+notes_app.frontend:
+  path: '/notes'
+  defaults:
+    _controller: '\Drupal\notes_app\Controller\NotesController::index'
+    _title: 'Notes App'
+  requirements:
+    _permission: 'access content'
+
+notes_app.api_get:
+  path: '/api/notes'
+  defaults:
+    _controller: '\Drupal\notes_app\Controller\NotesController::getNotes'
+  methods: [GET]
+  requirements:
+    _permission: 'access content'
+
+notes_app.api_create:
+  path: '/api/notes'
+  defaults:
+    _controller: '\Drupal\notes_app\Controller\NotesController::createNote'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
+
+notes_app.api_update:
+  path: '/api/notes/{node}'
+  defaults:
+    _controller: '\Drupal\notes_app\Controller\NotesController::updateNote'
+  methods: [PATCH, POST]
+  requirements:
+    _permission: 'access content'
+    node: \d+
+
+notes_app.api_delete:
+  path: '/api/notes/{node}'
+  defaults:
+    _controller: '\Drupal\notes_app\Controller\NotesController::deleteNote'
+  methods: [DELETE]
+  requirements:
+    _permission: 'access content'
+    node: \d+

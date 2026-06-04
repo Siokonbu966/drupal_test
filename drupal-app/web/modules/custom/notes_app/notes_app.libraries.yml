@@ -1,0 +1,10 @@
+notes-app:
+  version: 1.x
+  css:
+    theme:
+      css/styles.css: {}
+  js:
+    js/app.js: { attributes: { defer: true } }
+  dependencies:
+    - core/drupal
+    - core/drupalSettings

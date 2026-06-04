@@ -1,0 +1,100 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the notes_app module.
+ */
+
+use Drupal\node\Entity\NodeType;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Implements hook_install().
+ */
+function notes_app_install() {
+  // 1. Create NodeType 'note' if it doesn't exist
+  if (!NodeType::load('note')) {
+    $node_type = NodeType::create([
+      'type' => 'note',
+      'name' => 'Note',
+      'description' => 'A user note with title, body, color, and category.',
+      'new_revision' => FALSE,
+    ]);
+    $node_type->save();
+
+    // Attach standard body field to 'note' NodeType
+    // This is defined in node.module
+    node_add_body_field($node_type, 'Body');
+  }
+
+  // 2. Create custom fields programmatically
+  // Field: Color (string)
+  if (!FieldStorageConfig::load('node.field_color')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_color',
+      'entity_type' => 'node',
+      'type' => 'string',
+    ])->save();
+  }
+
+  if (!FieldConfig::load('node.note.field_color')) {
+    FieldConfig::create([
+      'field_name' => 'field_color',
+      'entity_type' => 'node',
+      'bundle' => 'note',
+      'label' => 'Note Color',
+      'required' => FALSE,
+    ])->save();
+  }
+
+  // Field: Category (string)
+  if (!FieldStorageConfig::load('node.field_category')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_category',
+      'entity_type' => 'node',
+      'type' => 'string',
+    ])->save();
+  }
+
+  if (!FieldConfig::load('node.note.field_category')) {
+    FieldConfig::create([
+      'field_name' => 'field_category',
+      'entity_type' => 'node',
+      'bundle' => 'note',
+      'label' => 'Note Category',
+      'required' => FALSE,
+    ])->save();
+  }
+
+  // 3. Set front page to /notes
+  \Drupal::configFactory()->getEditable('system.site')
+    ->set('page.front', '/notes')
+    ->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function notes_app_uninstall() {
+  // Revert front page to default
+  \Drupal::configFactory()->getEditable('system.site')
+    ->set('page.front', '/node')
+    ->save();
+
+  // Clean up content type
+  $node_type = NodeType::load('note');
+  if ($node_type) {
+    // Delete all nodes of type 'note' first
+    $nids = \Drupal::entityQuery('node')
+      ->condition('type', 'note')
+      ->accessCheck(FALSE)
+      ->execute();
+    if (!empty($nids)) {
+      $storage = \Drupal::entityTypeManager()->getStorage('node');
+      $nodes = $storage->loadMultiple($nids);
+      $storage->delete($nodes);
+    }
+    $node_type->delete();
+  }
+}
